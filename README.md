@@ -1,3 +1,1 @@
-# balance-tracker v 0.1
-
-test
+# BALANCE TRACKER v 0.1
