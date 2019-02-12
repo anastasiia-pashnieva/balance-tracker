@@ -17,8 +17,9 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '15'))
     }
     stages {
-        stage('Build') {
+        stage('Configuring parameters') {
             steps {
+                deleteDir()
                 sh "ls -laht"
             }
         }
