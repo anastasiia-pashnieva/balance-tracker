@@ -27,7 +27,7 @@ pipeline {
         always {  
             script{
                 echo "ALWAYS"
-                deleteDir()
+                cleanWs()
             }                 
         }
     }
