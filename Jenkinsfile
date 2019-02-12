@@ -19,7 +19,6 @@ pipeline {
     stages {
         stage('Configuring parameters') {
             steps {
-                deleteDir()
                 sh "ls -laht"
             }
         }
@@ -28,6 +27,7 @@ pipeline {
         always {  
             script{
                 echo "ALWAYS"
+                deleteDir()
             }                 
         }
     }
