@@ -26,9 +26,7 @@ pipeline {
         stage('Test'){
             steps{
                 script{
-                    ansiColor('xterm') {
                         sh "ls -laht"
-                    }
                 }                    
             }
         }        
@@ -36,9 +34,7 @@ pipeline {
     post {
         always {  
             script{
-                ansiColor('xterm') {                
 
-                }  
             }                 
         }
     }
