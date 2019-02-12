@@ -8,7 +8,7 @@ import java.util.*
 import java.lang.*
 
 pipeline {    
-    agent { label 'jdk8' }
+    agent any
     parameters {        
         string(defaultValue: "a", description: '', name: 'Test')
 
