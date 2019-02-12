@@ -7,34 +7,26 @@ import java.time.*
 import java.util.*
 import java.lang.*
 
-pipeline {    
+pipeline {
     agent any
     parameters {        
         string(defaultValue: "a", description: '', name: 'Test')
-
     }
     options {
         timestamps()
         buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '15'))
-    }    
-    stages {       
-        stage('Initialize Build') {
+    }
+    stages {
+        stage('Build') {
             steps {
-                initBuild(commit: env.shortCommit)                
+                sh "ls -laht"
             }
         }
-        stage('Test'){
-            steps{
-                script{
-                        sh "ls -laht"
-                }                    
-            }
-        }        
     }
     post {
         always {  
             script{
-
+                echo "ALWAYS"
             }                 
         }
     }
