@@ -1,6 +1,7 @@
 package com.pashnieva.website.api.user.validator;
 
 import com.pashnieva.website.api.user.api.model.request.CreateUserRequest;
+import com.pashnieva.website.api.user.api.model.request.UpdateUserRequest;
 import com.pashnieva.website.api.user.dto.User;
 import com.pashnieva.website.common.util.StringUtils;
 import org.springframework.stereotype.Component;
@@ -30,8 +31,12 @@ public class UserValidator {
         }
     }
 
-    public void validateCreateUpdateUserRequest(CreateUserRequest createUserRequest) {
+    public void validateCreateUserRequest(CreateUserRequest createUserRequest) {
         validateName(createUserRequest.getFirstName());
+    }
+
+    public void validateUpdateUserRequest(UpdateUserRequest updateUserRequest) {
+        validateName(updateUserRequest.getFirstName());
     }
 
     private void validateName(String name) {

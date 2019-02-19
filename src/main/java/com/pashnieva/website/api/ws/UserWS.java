@@ -2,9 +2,9 @@ package com.pashnieva.website.api.ws;
 
 import com.pashnieva.website.api.payment.service.CreditCardService;
 import com.pashnieva.website.api.user.api.model.request.CreateUserRequest;
+import com.pashnieva.website.api.user.api.model.request.UpdateUserRequest;
 import com.pashnieva.website.api.user.api.model.response.UserResponse;
 import com.pashnieva.website.api.user.api.model.transformer.UserTransformer;
-import com.pashnieva.website.api.user.dto.User;
 import com.pashnieva.website.api.user.service.UserService;
 import com.pashnieva.website.api.user.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +25,29 @@ public class UserWS {
     private UserValidator userValidator;
 
     @Autowired
-    private UserTransformer<CreateUserRequest> transformer;
+    private UserTransformer<CreateUserRequest> createUserRequestTransformer;
+
+    @Autowired
+    private UserTransformer<UpdateUserRequest> updateUserRequestTransformer;
 
     @GetMapping("/{userId}")
     public ResponseEntity getUserById(@PathVariable("userId") String userId) {
-        userValidator.validateUserId(userId);
-        User user = userService.getUser(userId);
-        return ResponseEntity.ok(UserResponse.from(user));
+        return ResponseEntity.ok(UserResponse.from(userService.getUser(userId)));
     }
 
     @PostMapping()
     public ResponseEntity createUser(@RequestBody CreateUserRequest createUserRequest) {
-        userValidator.validateCreateUpdateUserRequest(createUserRequest);
-        User user = userService.createUser(transformer.transform(createUserRequest));
-        return ResponseEntity.ok(UserResponse.from(user));
+        return ResponseEntity.ok(UserResponse.from(userService.createUser(createUserRequest)));
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity updateUser(@PathVariable("userId") String userId, @RequestBody UpdateUserRequest updateUserRequest) {
+        return ResponseEntity.ok(UserResponse.from(userService.updateUser(updateUserRequest, userId)));
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity deleteUser(@PathVariable("userId") String userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.noContent().build();
     }
 }
