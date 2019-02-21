@@ -1,49 +1,62 @@
 package com.pashnieva.website.api.payment.service;
 
+import com.pashnieva.website.api.payment.api.model.request.CreateCreditCardRequest;
+import com.pashnieva.website.api.payment.api.model.request.UpdateCreditCardRequest;
+import com.pashnieva.website.api.payment.api.model.transformer.CreditCardTransformer;
 import com.pashnieva.website.api.payment.dto.CreditCard;
-import com.pashnieva.website.api.payment.repository.CreditCardRepository;
+import com.pashnieva.website.api.payment.validator.CreditCardValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CreditCardServiceImpl implements CreditCardService {
 
     @Autowired
-    private CreditCardRepository creditCardRepository;
+    private CreditCardManagementService creditCardService;
+
+    @Autowired
+    private CreditCardValidator creditCardValidator;
+
+    @Autowired
+    private CreditCardTransformer<CreateCreditCardRequest> createCreditCardRequestTransformer;
+
+    @Autowired
+    private CreditCardTransformer<UpdateCreditCardRequest> updateCreditCardRequestTransformer;
 
     @Override
     public CreditCard getCreditCard(String id) {
-        return creditCardRepository.getOne(id);
+        creditCardValidator.validateCreditCardId(id);
+        return creditCardService.getCreditCard(id);
     }
 
     @Override
     public List<CreditCard> getAllCreditCards() {
-        return creditCardRepository.findAll();
-    }
-
-    /*@Override
-    public List<CreditCard> getCreditCardsByUser(User user) {
-        return creditCardRepository.findByUser(user);
-    }*/
-
-    @Override
-    @Transactional
-    public CreditCard addCreditCard(CreditCard creditCard) {
-        return creditCardRepository.save(creditCard);
+        return creditCardService.getAllCreditCards();
     }
 
     @Override
-    @Transactional
-    public CreditCard updateCreditCard(CreditCard creditCard) {
-        return creditCardRepository.save(creditCard);
+    public CreditCard addCreditCard(CreateCreditCardRequest request) {
+        creditCardValidator.validateCreateCreditCardRequest(request);
+        return creditCardService.addCreditCard(createCreditCardRequestTransformer.transform(request));
     }
 
     @Override
-    @Transactional
+    public CreditCard updateCreditCard(UpdateCreditCardRequest request, String cardId) {
+        creditCardValidator.validateCreditCardId(cardId);
+        creditCardValidator.validateUpdateCreditCardRequest(request);
+
+        Map<String, Object> cardProperties = new HashMap<>();
+        cardProperties.put("cardId", cardId);
+        return creditCardService.updateCreditCard(updateCreditCardRequestTransformer.transform(request, cardProperties));
+    }
+
+    @Override
     public void deleteCreditCard(String id) {
-        creditCardRepository.deleteById(id);
+        creditCardValidator.validateCreditCardId(id);
+        creditCardService.deleteCreditCard(id);
     }
 }

@@ -4,6 +4,7 @@ import com.pashnieva.website.api.user.dto.User;
 import com.pashnieva.website.api.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,17 +30,20 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
+    @Transactional
     public User createUser(User user) {
         return userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public User updateUser(User user) {
         validateUserExists(user.getId());
         return userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public void deleteUser(String id) {
         validateUserExists(id);
         userRepository.deleteById(id);
